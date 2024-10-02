@@ -1,11 +1,11 @@
-##Loading the Google Drive 
+## Loading the Google Drive 
 from google.colab import drive
 drive.mount("/content/drive")
 
-##Installation
+## Installation
 pip install langchain sentence-transformers chromadb llama-cpp-python langchain_community pypdf
 
-##Installing Libraries
+## Installing Libraries
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import SentenceTransformerEmbeddings
@@ -13,20 +13,20 @@ from langchain.vectorstores import Chroma
 from langchain_community.llms import LlamaCpp
 from langchain.chains import RetrievalQA, LLMChain
 
-##Importing Pdf
+## Importing Pdf
 loader = PyPDFDirectoryLoader("/content/drive/MyDrive/Generative AI/Medical Bot")
 docs = loader.load()
 
-##Chunking
+## Chunking
 text_splitter=RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=50)
 chunks = text_splitter.split_documents(docs)
 
-##Embeddings
+## Embeddings
 import os
 os.environ['HUGGINGFACEHUB_API_TOKEN'] = "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"
 embeddings = SentenceTransformerEmbeddings(model_name="NeuML/pubmedbert-base-embeddings")
 
-##Vector Store Creation
+## Vector Store Creation
 vectorstore = Chroma.from_documents(chunks, embeddings)
 query = "who is at heart risk?"
 search_results = vectorstore.similarity_search(query)
@@ -34,7 +34,7 @@ search results
 retriever = vectorstore.as_retriever(search_kwargs={'k':5})
 retriever.get_relevant_documents(query)
 
-##LLM Model Loading
+## LLM Model Loading
 llm = LlamaCpp(
 model_path="",
 temperature=0.2,
